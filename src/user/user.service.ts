@@ -59,7 +59,13 @@ export class UserService {
       });
       return { token };
     } catch (error) {
-      throw new InternalServerErrorException(error);
+      if (
+        error instanceof UnauthorizedException ||
+        error instanceof ForbiddenException
+      ) {
+        throw error;
+      }
+      throw new InternalServerErrorException(error.message);
     }
   }
 

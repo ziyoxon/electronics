@@ -6,11 +6,11 @@ import { OtpDto } from "./dto/otp-dto";
 export class OtpController {
   constructor(private readonly otpService: OtpService) {}
 
-  @Post("send")
+  @Post("sendotp")
   async sendOtp(@Body("email") email: string) {
     return this.otpService.generateAndSendOtp(email);
   }
-  
+
   @Post("verify")
   async verifyOtp(@Body() otpDto: OtpDto) {
     const { email, otp } = otpDto;

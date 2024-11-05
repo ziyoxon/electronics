@@ -67,7 +67,7 @@ export class OtpService {
         verified: false, 
       },
     });
-    if (!otpRecord) {
+    if (!otpRecord) { 
       return {
         status: 'Failure',
         message: 'Invalid OTP or OTP has already been verified.',

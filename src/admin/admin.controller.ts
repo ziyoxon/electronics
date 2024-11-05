@@ -17,14 +17,18 @@ import { Response, Request } from "express";
 import { AdminCreatorGuard } from "../guards/admin_creator.guard";
 import { CookieGetter } from "../decorator/cookie.getter";
 import { AdminSelfGuard } from "../guards/admin_self.guard";
+import { IsCreatorGuard } from "../guards/is_creator.guard";
+import { Admin } from "./models/admin.model";
+import { SignInDto } from "../auth/dto/signin-auth.dto";
+
 
 @ApiTags("Admin")
 @Controller("admin")
 export class AdminController {
   constructor(private readonly adminService: AdminService) {}
 
+  @UseGuards(AdminCreatorGuard)
   @Post()
-  // @UseGuards(AdminCreatorGuard)
   @ApiOperation({ summary: "Yangi admin yaratish" })
   @ApiResponse({ status: 201, description: "Admin yaratildi." })
   @ApiResponse({ status: 400, description: "Xato ma'lumotlar." })
@@ -33,7 +37,7 @@ export class AdminController {
   }
 
   @ApiOperation({ summary: "ma'lumotlarni tokenga o'zgartirish" })
-  @Post("/refreshToken/:id")
+  @Post("/refresh/:id")
   async refreshToken(
     @Param("id") id: number,
     @CookieGetter("refresh_token") refresh_token: string,
@@ -50,7 +54,6 @@ export class AdminController {
     return this.adminService.findAll();
   }
 
-  @UseGuards(AdminSelfGuard)
   @Get(":id")
   @ApiOperation({ summary: "Adminni ID orqali olish" })
   @ApiParam({
@@ -64,7 +67,7 @@ export class AdminController {
     return this.adminService.findOne(+id);
   }
 
-  @UseGuards(AdminSelfGuard)
+  @UseGuards(AdminCreatorGuard)
   @Patch(":id")
   @ApiOperation({ summary: "Admin ma'lumotlarini yangilash" })
   @ApiParam({

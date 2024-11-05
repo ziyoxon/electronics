@@ -20,6 +20,9 @@ import { CookieGetter } from "../decorator/cookie.getter";
 import { JwtService } from "@nestjs/jwt";
 import { CreateUserDto } from "../user/dto/create-user.dto";
 import { User } from "../user/models/user.model";
+import { AdminSelfGuard } from "../guards/admin_self.guard";
+import { ClientRefreshTokenGuard } from "../guards/user_refresh_token.guard";
+import { IsCreatorGuard } from "../guards/is_creator.guard";
 @Controller("auth")
 export class AuthController {
   constructor(
@@ -42,6 +45,7 @@ export class AuthController {
     return res.status(201).json(result);
   }
 
+  @UseGuards(AdminCreatorGuard)
   @Post("signin")
   @ApiOperation({ summary: "Admin tizimga kirish" })
   @ApiResponse({
@@ -53,6 +57,9 @@ export class AuthController {
     return this.authService.adminSignIn(adminSignInDto, res);
   }
 
+  
+
+  // @UseGuards(ClientRefreshTokenGuard)
   @ApiOperation({ summary: "ma'lumotlarni tokenga o'zgartirish" })
   @Post("/refresh/:id")
   async refreshToken(
@@ -81,6 +88,7 @@ export class AuthController {
 
   //---------------------------USerr-----------
 
+  // @UseGuards(IsCreatorGuard)
   @Post("signup_user")
   @ApiOperation({ summary: "Yangi User qo'shish " })
   @ApiResponse({
@@ -108,7 +116,7 @@ export class AuthController {
   }
 
   @ApiOperation({ summary: "ma'lumotlarni tokenga o'zgartirish" })
-  @Post("/refresh     /:id")
+  @Post("/refreshToken/:id")
   async refreshTokenUser(
     @Param("id") id: number,
     @CookieGetter("refresh_token") refresh_token: string,

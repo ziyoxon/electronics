@@ -10,7 +10,6 @@ import { InjectModel } from "@nestjs/sequelize";
 import { Admin } from "../admin/models/admin.model";
 import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from "bcrypt";
-import * as uuid from "uuid";
 import { Response } from "express";
 import { SignInDto } from "./dto/signin-auth.dto";
 import { User } from "../user/models/user.model";
@@ -68,7 +67,14 @@ export class AuthService {
         token,
       };
     } catch (error) {
-      throw new InternalServerErrorException(error);
+          if (
+            error instanceof UnauthorizedException ||
+            error instanceof ForbiddenException
+          ) {
+            throw error; 
+          }
+          throw new InternalServerErrorException(error.message);
+
     }
   }
 
@@ -171,8 +177,8 @@ export class AuthService {
       });
 
       await this.adminModel.update(
-        { hashed_refresh_token: "" }, // Data to update
-        { where: { id: payload.id } } // Options object with `where` clause
+        { hashed_refresh_token: "" },
+        { where: { id: payload.id } } 
       );
 
       return { message: "Admin success signout", id: payload.id };
@@ -180,6 +186,9 @@ export class AuthService {
       throw new BadRequestException("Internal server error");
     }
   }
+
+
+  
 
   //-------------------------------------USER----------------------
 
@@ -228,7 +237,14 @@ export class AuthService {
         token,
       };
     } catch (error) {
-      throw new InternalServerErrorException(error);
+           if (
+             error instanceof UnauthorizedException ||
+             error instanceof ForbiddenException
+           ) {
+             throw error; 
+           }
+           throw new InternalServerErrorException(error.message);
+
     }
   }
 

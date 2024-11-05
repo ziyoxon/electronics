@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   Res,
+  UseGuards,
 } from "@nestjs/common";
 import { ApiTags, ApiOperation, ApiResponse, ApiParam } from "@nestjs/swagger";
 import { UserService } from "./user.service";
@@ -14,13 +15,15 @@ import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { Response } from "express";
 import { CookieGetter } from "../decorator/cookie.getter";
+import { Otp } from "../OTP/otp-admin";
 
 @ApiTags("User")
 @Controller("user")
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Post()
+  
+  @Post("signin")
   @ApiOperation({ summary: "Yangi user yaratish" })
   @ApiResponse({ status: 201, description: "User yaratildi." })
   @ApiResponse({ status: 400, description: "Xato ma'lumotlar." })
@@ -45,7 +48,6 @@ export class UserController {
     return this.userService.findAll();
   }
 
-  // @UseGuards(UserSelfGuard)
   @Get(":id")
   @ApiOperation({ summary: "Userni ID orqali olish" })
   @ApiParam({

@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
 import { BackedDetailsService } from './backed_details.service';
 import { CreateBackedDetailDto } from './dto/create-backed_detail.dto';
 import { UpdateBackedDetailDto } from './dto/update-backed_detail.dto';
+import { AdminCreatorGuard } from '../guards/admin_creator.guard';
 
 @ApiTags('Backed Details')
 @Controller('backed_details')

@@ -6,11 +6,13 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from "@nestjs/common";
 import { ApiTags, ApiOperation, ApiResponse, ApiParam } from "@nestjs/swagger";
 import { BacketService } from "./backet.service";
 import { CreateBacketDto } from "./dto/create-backet.dto";
 import { UpdateBacketDto } from "./dto/update-backet.dto";
+import { AdminCreatorGuard } from "../guards/admin_creator.guard";
 
 @ApiTags("Backet")
 @Controller("backet")
