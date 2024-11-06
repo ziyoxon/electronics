@@ -21,8 +21,6 @@ import { JwtService } from "@nestjs/jwt";
 import { CreateUserDto } from "../user/dto/create-user.dto";
 import { User } from "../user/models/user.model";
 import { AdminSelfGuard } from "../guards/admin_self.guard";
-import { ClientRefreshTokenGuard } from "../guards/user_refresh_token.guard";
-import { IsCreatorGuard } from "../guards/is_creator.guard";
 @Controller("auth")
 export class AuthController {
   constructor(
@@ -57,9 +55,7 @@ export class AuthController {
     return this.authService.adminSignIn(adminSignInDto, res);
   }
 
-  
-
-  // @UseGuards(ClientRefreshTokenGuard)
+  @UseGuards(AdminCreatorGuard)
   @ApiOperation({ summary: "ma'lumotlarni tokenga o'zgartirish" })
   @Post("/refresh/:id")
   async refreshToken(
@@ -88,7 +84,6 @@ export class AuthController {
 
   //---------------------------USerr-----------
 
-  // @UseGuards(IsCreatorGuard)
   @Post("signup_user")
   @ApiOperation({ summary: "Yangi User qo'shish " })
   @ApiResponse({
@@ -96,10 +91,7 @@ export class AuthController {
     description: "Create User",
     type: Admin,
   })
-  async userSignUp(
-    @Body() createUserDto: CreateUserDto,
-    @Res() res: Response
-  ) {
+  async userSignUp(@Body() createUserDto: CreateUserDto, @Res() res: Response) {
     const result = await this.authService.userSignUp(createUserDto, res);
     return res.status(201).json(result);
   }
@@ -115,6 +107,7 @@ export class AuthController {
     return this.authService.userSignIn(userSignInDto, res);
   }
 
+  @UseGuards(AdminCreatorGuard)
   @ApiOperation({ summary: "ma'lumotlarni tokenga o'zgartirish" })
   @Post("/refreshToken/:id")
   async refreshTokenUser(

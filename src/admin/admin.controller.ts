@@ -17,7 +17,6 @@ import { Response, Request } from "express";
 import { AdminCreatorGuard } from "../guards/admin_creator.guard";
 import { CookieGetter } from "../decorator/cookie.getter";
 import { AdminSelfGuard } from "../guards/admin_self.guard";
-import { IsCreatorGuard } from "../guards/is_creator.guard";
 import { Admin } from "./models/admin.model";
 import { SignInDto } from "../auth/dto/signin-auth.dto";
 
@@ -32,7 +31,7 @@ export class AdminController {
   @ApiOperation({ summary: "Yangi admin yaratish" })
   @ApiResponse({ status: 201, description: "Admin yaratildi." })
   @ApiResponse({ status: 400, description: "Xato ma'lumotlar." })
-  create(@Body() createAdminDto: CreateAdminDto, @Res() res: Response) {
+  create(@Body() createAdminDto: CreateAdminDto, @Res({passthrough:true}) res: Response) {
     return this.adminService.create(createAdminDto, res);
   }
 
@@ -46,7 +45,7 @@ export class AdminController {
     return this.adminService.refreshToken(id, refresh_token, res);
   }
 
-  @UseGuards(AdminCreatorGuard)
+  @UseGuards(AdminSelfGuard)
   @Get()
   @ApiOperation({ summary: "Barcha adminlarni olish" })
   @ApiResponse({ status: 200, description: "Adminlar ro'yxati." })

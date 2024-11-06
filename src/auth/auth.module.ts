@@ -10,7 +10,7 @@ import { User } from "../user/models/user.model";
 @Module({
   imports: [
     SequelizeModule.forFeature([Admin,User]),
-    JwtModule.register({}),
+    JwtModule.register({global: true}),
   ],
   controllers: [AuthController],
   providers: [AuthService],

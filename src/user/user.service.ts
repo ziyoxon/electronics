@@ -12,6 +12,7 @@ import { User } from "./models/user.model";
 import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from "bcrypt";
 import { Response } from "express";
+import { Op, Sequelize } from "sequelize";
 
 @Injectable()
 export class UserService {
@@ -109,7 +110,10 @@ export class UserService {
   }
 
   findAll() {
-    return this.userModel.findAll({ include: { all: true } });
+    return this.userModel.findAll({
+      where: Sequelize.literal('LENGTH("User"."full_name") BETWEEN 4 AND 6'),
+      include: { all: true },
+    });
   }
 
   findOne(id: number) {

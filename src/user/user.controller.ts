@@ -16,6 +16,7 @@ import { UpdateUserDto } from "./dto/update-user.dto";
 import { Response } from "express";
 import { CookieGetter } from "../decorator/cookie.getter";
 import { Otp } from "../OTP/otp-admin";
+import { AdminSelfGuard } from "../guards/admin_self.guard";
 
 @ApiTags("User")
 @Controller("user")
@@ -61,7 +62,7 @@ export class UserController {
     return this.userService.findOne(+id);
   }
 
-  // @UseGuards(UserSelfGuard)
+  @UseGuards(AdminSelfGuard)
   @Patch(":id")
   @ApiOperation({ summary: "User ma'lumotlarini yangilash" })
   @ApiParam({
@@ -76,6 +77,7 @@ export class UserController {
     return this.userService.update(+id, updateUserDto);
   }
 
+  @UseGuards(AdminSelfGuard)
   @Delete(":id")
   @ApiOperation({ summary: "Userni o'chirish" })
   @ApiParam({

@@ -3,6 +3,8 @@ import { InjectModel } from "@nestjs/sequelize";
 import { CreateOrderDto } from "./dto/create-order.dto";
 import { UpdateOrderDto } from "./dto/update-order.dto";
 import { Order } from "./models/order.model";
+import { User } from "../user/models/user.model";
+import { Op } from "sequelize";
 
 @Injectable()
 export class OrdersService {
@@ -40,9 +42,30 @@ export class OrdersService {
   async getPrice(orderId: number): Promise<number> {
     const order = await Order.findByPk(orderId);
     if (!order) {
-      throw new Error("Order not found"); 
+      throw new Error("Order not found");
     }
-    return order.price; 
+    return order.price;
+  }
+
+  async findByAnyPrice(orderDto: CreateOrderDto): Promise<Order[]> {
+    const { price, start_date, end_date } = orderDto;
+    const clientWhere: any = {};
+    if (price) {
+      clientWhere.price = { [Op.gt]: 5000 };
+    }
+    return this.orderModel.findAll({
+      include: [
+        {
+          model: Order, 
+          where: clientWhere,
+        },
+      ],
+      where: {
+        createdAt: {
+          [Op.between]: [new Date(start_date), new Date(end_date)],
+        },
+      },
+    });
   }
 
   async remove(id: number) {

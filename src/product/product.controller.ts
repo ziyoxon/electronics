@@ -6,17 +6,20 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from "@nestjs/common";
 import { ApiTags, ApiOperation, ApiResponse, ApiParam } from "@nestjs/swagger";
 import { ProductService } from "./product.service";
 import { CreateProductDto } from "./dto/create-product.dto";
 import { UpdateProductDto } from "./dto/update-product.dto";
+import { AdminSelfGuard } from "../guards/admin_self.guard";
 
 @ApiTags("Product")
 @Controller("product")
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
+  @UseGuards(AdminSelfGuard)
   @Post()
   @ApiOperation({ summary: "Yangi mahsulot yaratish" })
   @ApiResponse({
@@ -65,6 +68,7 @@ export class ProductController {
     return this.productService.update(+id, updateProductDto);
   }
 
+  @UseGuards(AdminSelfGuard)
   @Delete(":id")
   @ApiOperation({ summary: "Mahsulotni ID orqali o'chirish" })
   @ApiParam({

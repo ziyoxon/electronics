@@ -6,11 +6,13 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from "@nestjs/common";
 import { ApiTags, ApiOperation, ApiResponse, ApiParam } from "@nestjs/swagger";
 import { UserDiscountService } from "./user_discount.service";
 import { CreateUserDiscountDto } from "./dto/create-user_discount.dto";
 import { UpdateUserDiscountDto } from "./dto/update-user_discount.dto";
+import { AdminSelfGuard } from "../guards/admin_self.guard";
 
 @ApiTags("User Discount")
 @Controller("user_discount")
@@ -57,6 +59,7 @@ export class UserDiscountController {
     return this.userDiscountService.findOne(+id);
   }
 
+  @UseGuards(AdminSelfGuard)
   @Patch(":id")
   @ApiOperation({ summary: "Foydalanuvchi chegirmasini yangilash" })
   @ApiParam({
@@ -80,6 +83,8 @@ export class UserDiscountController {
     return this.userDiscountService.update(+id, updateUserDiscountDto);
   }
 
+
+  @UseGuards(AdminSelfGuard)
   @Delete(":id")
   @ApiOperation({ summary: "Foydalanuvchi chegirmasini o'chirish" })
   @ApiParam({

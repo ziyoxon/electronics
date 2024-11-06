@@ -6,11 +6,13 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from "@nestjs/common";
 import { OrdersService } from "./orders.service";
 import { CreateOrderDto } from "./dto/create-order.dto";
 import { UpdateOrderDto } from "./dto/update-order.dto";
 import { ApiTags, ApiOperation, ApiResponse, ApiParam } from "@nestjs/swagger";
+import { AdminSelfGuard } from "../guards/admin_self.guard";
 
 @ApiTags("Order")
 @Controller("order")
@@ -35,6 +37,11 @@ export class OrdersController {
     return this.ordersService.findAll();
   }
 
+  @Post("findByPrice")
+  async findByPrice(@Body() orderDto: CreateOrderDto) {
+    return await this.ordersService.findByAnyPrice(orderDto);
+  }
+
   @Get(":id")
   @ApiOperation({ summary: "Buyurtmani ID orqali olish" })
   @ApiParam({
@@ -48,6 +55,7 @@ export class OrdersController {
     return this.ordersService.findOne(+id);
   }
 
+  @UseGuards(AdminSelfGuard)
   @Patch(":id")
   @ApiOperation({ summary: "Buyurtma ma'lumotlarini yangilash" })
   @ApiParam({
@@ -65,6 +73,7 @@ export class OrdersController {
     return this.ordersService.update(+id, updateOrderDto);
   }
 
+  @UseGuards(AdminSelfGuard)
   @Delete(":id")
   @ApiOperation({ summary: "Buyurtmani o'chirish" })
   @ApiParam({

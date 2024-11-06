@@ -18,7 +18,7 @@ export class CreateOrderDto {
   })
   @IsString()
   @IsNotEmpty({ message: "Yetkazib berish turini kiritish majburiy" })
-  delivery_type: string;
+  delivery_type?: string;
 
   @ApiProperty({
     description: "Buyurtma berilgan sana",
@@ -27,5 +27,10 @@ export class CreateOrderDto {
   })
   @IsString()
   @IsOptional()
-  order_given_date: string;
+  order_given_date?: string;
+
+  
+  readonly start_date: string;
+  readonly end_date: string;
 }
+

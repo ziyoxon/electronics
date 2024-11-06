@@ -6,11 +6,14 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from "@nestjs/common";
 import { PaymentService } from "./payment.service";
 import { CreatePaymentDto } from "./dto/create-payment.dto";
 import { UpdatePaymentDto } from "./dto/update-payment.dto";
 import { ApiTags, ApiOperation, ApiResponse, ApiParam } from "@nestjs/swagger";
+import { AdminSelfGuard } from "../guards/admin_self.guard";
+import { AdminCreatorGuard } from "../guards/admin_creator.guard";
 
 @ApiTags("Payment")
 @Controller("payment")
@@ -51,6 +54,8 @@ export class PaymentController {
     return this.paymentService.findOne(+id);
   }
 
+
+  @UseGuards(AdminCreatorGuard)
   @Patch(":id")
   @ApiOperation({ summary: "To'lovni yangilash" })
   @ApiParam({
@@ -67,6 +72,7 @@ export class PaymentController {
     return this.paymentService.update(+id, updatePaymentDto);
   }
 
+  @UseGuards(AdminCreatorGuard)
   @Delete(":id")
   @ApiOperation({ summary: "To'lovni o'chirish" })
   @ApiParam({

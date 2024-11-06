@@ -41,12 +41,10 @@ export class AdminSelfGuard implements CanActivate {
     }
 
     if (payload.is_active !== true) {
-      throw new ForbiddenException({
-        message: "Sizda bunday huquq yo'q!, Creator emassiz!",
-      });
+      throw new ForbiddenException("Admin active emas!");
     }
 
-    if (payload.id !== Number(req.params.id)) {
+    if (payload.is_creator !== false) {
       throw new ForbiddenException("Sizda bunday huquq yo'q!");
     }
 
